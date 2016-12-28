@@ -1,6 +1,11 @@
 import re
+import itertools
+from config import *
 import os
 import itertools
+
+os.chdir(SYS_SETUP+os.sep+'topol_param_struct')
+
 chainID = ['protein', 'MLT_A', 'MLT_B', 'NDP_A', 'NDP_B', 'LIG2101_A', 'LIG2201_A']
 moleculeType = ['protein', 'MLT', 'NDP', 'LIG2101', 'LIG2201']
 packFiles = [['topol_Protein_chain_A.itp',
@@ -8,7 +13,7 @@ packFiles = [['topol_Protein_chain_A.itp',
               'posre_Protein_chain_A.itp',
               'posre_Protein_chain_B.itp'],
              ['MLT.atp', 'MLT.itp', 'posre_MLT.itp'],
-             ['NDP.atp', 'NDP.itp', 'posre_NDP.itp'],
+             ['NAD.atp', 'NAD.itp', 'posre_NAD.itp'],
              ['LIG2101.atp', 'LIG2101.itp', 'posre_LIG2101.itp'],
              ['LIG2201.atp', 'LIG2201.itp', 'posre_LIG2201.itp']
             ]
@@ -16,10 +21,18 @@ packFiles = [['topol_Protein_chain_A.itp',
 structFiles = ['protein_processed.gro',
                'MLT_chainA.gro',
                'MLT_chainB.gro',
-               'NDP_chainA.gro',
-               'NDP_chainB.gro',
+               'NAD_chainA.gro',
+               'NAD_chainB.gro',
                'LIG2101_chainA.gro',
                'LIG2201_chainA.gro']
+
+pdbFiles = ['Protein.pdb',
+            'MLT_chainA.pdb',
+            'MLT_chainB.pdb',
+            'NAD_chainA.pdb',
+            'NAD_chainB.pdb',
+            'LIG2101_chainA.pdb',
+            'LIG2201_chainA.pdb']
 
 resFiles = ['posre_MLT.inp',
             'posre_NDP.inp',
@@ -37,6 +50,7 @@ topFiles = ['MLT.itp',
             'LIG2201.itp']
 
 structs = {x:y for x,y in zip(chainID, structFiles)}
+pdbStruts = {x:y for x,y in zip(chainID, pdbFiles)}
 tops = {x:y for x,y in zip(moleculeType[1:], topFiles)}
 ffs = {x:y for x,y in zip(moleculeType[1:], ffFiles)}
 restraints = {x:y for x,y in zip(moleculeType[1:], resFiles)}
@@ -107,6 +121,28 @@ def buildSysGro(chainTop, gros):
     size = gros['protein'].size
     sys_gro = header+atomNum+coor+size
     return sys_gro
+
+
+def buildSysPdb(chainTop, gros):
+
+    def readPdbs():
+        pdbs = []
+        for t in chainTop:
+            pdbs.append(open(pdbStruts[t], 'r').readlines()[:-1])
+        return pdbs
+    
+    def mergePdb(pdbs):
+        for pdb in pdbs:
+            if pdb[-1].strip() != 'TER':
+                pdb.append('TER\n')
+        pdbs = list(itertools.chain.from_iterable(pdbs))
+        merged = ''.join(pdbs)
+        merged += 'END'
+        return merged
+    
+    pdbs = readPdbs()
+    merged = mergePdb(pdbs)
+    return merged
     
 
 def buildSysTop(chainTop, gros):
@@ -143,7 +179,7 @@ def packFile(gros, destDir):
     forPacking = list(itertools.chain.from_iterable(forPacking))
     for i in forPacking:
         os.system('cp %s %s' % (i, destDir))
-    os.system('mv %s %s %s' % ('system.gro', 'topol.top', destDir))
+    os.system('mv %s %s %s' % ('system.*', 'topol.top', destDir))
     os.system('cp %s %s %s' % ('ions.mdp', 'system_setup.sh', destDir))
     if gros['subNum'] == 0 and gros['ligNum'] > 0:
         os.system('cp noMLT/%s %s' % (ffs[gros['ligName']], destDir))
@@ -156,12 +192,15 @@ def runGromax(destDir):
 def prepSys(chainTop, destDir):
     groFile = open('system.gro', 'w')
     topFile = open('topol.top', 'w')
+    pdbFile = open('system.pdb', 'w')
     
     gros = readGros(chainTop)
     sysGro = buildSysGro(chainTop, gros)
     sysTop = buildSysTop(chainTop, gros)
+    sysPdb = buildSysPdb(chainTop, gros)
     groFile.write(sysGro)
     topFile.write(sysTop)
+    pdbFile.write(sysPdb)
     packFile(gros, destDir)
     # runGromax(destDir)
      
@@ -194,6 +233,3 @@ folders = ['Prot_CoF_SubS_dimer_LIG2101',
            'Prot_CoF_dimer',
            #'Prot_CoF_monomer',           
            ]
-
-
-
