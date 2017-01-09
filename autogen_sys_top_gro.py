@@ -6,7 +6,7 @@ import itertools
 
 os.chdir(SYS_SETUP+os.sep+'topol_param_struct')
 
-chainID = ['protein', 'MLT_A', 'MLT_B', 'NDP_A', 'NDP_B', 'LIG2101_A', 'LIG2201_A']
+chainID = ['protein', 'MLT_A', 'MLT_B', 'NDP_A', 'NDP_B', 'LIG2101_A', 'LIG2201_B']
 moleculeType = ['protein', 'MLT', 'NDP', 'LIG2101', 'LIG2201']
 packFiles = [['topol_Protein_chain_A.itp',
               'topol_Protein_chain_B.itp',
@@ -24,7 +24,7 @@ structFiles = ['protein_processed.gro',
                'NAD_chainA.gro',
                'NAD_chainB.gro',
                'LIG2101_chainA.gro',
-               'LIG2201_chainA.gro']
+               'LIG2201_chainB.gro']
 
 pdbFiles = ['Protein.pdb',
             'MLT_chainA.pdb',
@@ -32,7 +32,7 @@ pdbFiles = ['Protein.pdb',
             'NAD_chainA.pdb',
             'NAD_chainB.pdb',
             'LIG2101_chainA.pdb',
-            'LIG2201_chainA.pdb']
+            'LIG2201_chainB.pdb']
 
 resFiles = ['posre_MLT.inp',
             'posre_NDP.inp',
@@ -207,11 +207,11 @@ def prepSys(chainTop, destDir):
 
 chainTops = [['protein', 'MLT_A', 'NDP_A', 'MLT_B', 'NDP_B', 'LIG2101_A'],
              #['protein', 'MLT_A', 'NDP_A', 'LIG2101_A'],
-             ['protein', 'MLT_A', 'NDP_A', 'MLT_B', 'NDP_B', 'LIG2201_A'],
+             ['protein', 'MLT_A', 'NDP_A', 'MLT_B', 'NDP_B', 'LIG2201_B'],
              #['protein', 'MLT_A', 'NDP_A', 'LIG2201_A'],
              ['protein', 'NDP_A', 'NDP_B', 'LIG2101_A'],
              #['protein', 'NDP_A', 'LIG2101_A'],
-             ['protein', 'NDP_A', 'NDP_B', 'LIG2201_A'],
+             ['protein', 'NDP_A', 'NDP_B', 'LIG2201_B'],
              #['protein', 'NDP_A', 'LIG2201_A'],
              ['protein', 'MLT_A', 'NDP_A', 'MLT_B', 'NDP_B'],
              #['protein', 'MLT_A', 'NDP_A'],
