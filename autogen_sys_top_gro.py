@@ -2,7 +2,6 @@ import re
 import itertools
 from config import *
 import os
-import itertools
 
 os.chdir(SYS_SETUP+os.sep+'topol_param_struct')
 
@@ -35,17 +34,17 @@ pdbFiles = ['Protein.pdb',
             'LIG2201_chainB.pdb']
 
 resFiles = ['posre_MLT.inp',
-            'posre_NDP.inp',
+            'posre_NAD.inp',
             'posre_LIG2101.inp',
             'posre_LIG2201.inp']
 
 ffFiles = ['MLT.atp',
-           'NDP.atp',
+           'NAD.atp',
            'LIG2101.atp',
            'LIG2201.atp']
 
 topFiles = ['MLT.itp',
-            'NDP.itp',
+            'NAD.itp',
             'LIG2101.itp',
             'LIG2201.itp']
 
@@ -208,11 +207,11 @@ def prepSys(chainTop, destDir):
 chainTops = [['protein', 'MLT_A', 'NDP_A', 'MLT_B', 'NDP_B', 'LIG2101_A'],
              #['protein', 'MLT_A', 'NDP_A', 'LIG2101_A'],
              ['protein', 'MLT_A', 'NDP_A', 'MLT_B', 'NDP_B', 'LIG2201_B'],
-             #['protein', 'MLT_A', 'NDP_A', 'LIG2201_A'],
+             #['protein', 'MLT_A', 'NDP_A', 'LIG2201_B'],
              ['protein', 'NDP_A', 'NDP_B', 'LIG2101_A'],
              #['protein', 'NDP_A', 'LIG2101_A'],
              ['protein', 'NDP_A', 'NDP_B', 'LIG2201_B'],
-             #['protein', 'NDP_A', 'LIG2201_A'],
+             #['protein', 'NDP_A', 'LIG2201_B'],
              ['protein', 'MLT_A', 'NDP_A', 'MLT_B', 'NDP_B'],
              #['protein', 'MLT_A', 'NDP_A'],
              ['protein', 'NDP_A', 'NDP_B'],

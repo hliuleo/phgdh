@@ -8,7 +8,7 @@ Created on Wed Jan 11 16:30:57 2017
 import os
 import MDAnalysis as md
 import MDAnalysis.analysis.rms as rms
-from plot_set import *
+from researchcode.plotting.plot_set import *
 
 WORKDIR = os.sep.join([os.environ['phgdh'], 'analysis', 'rmsf'])
 TRJDIR = os.sep.join([os.environ['phgdh'], 'data', 'trj'])
@@ -94,7 +94,7 @@ class rmsf_Comparer():
         
 
 rmsf = rmsf_Comparer()
-
+'''
 trjInfo = {'HL_apo': 1,
            'HL_lig2201': 1,
            'PL_apo': 4,
@@ -120,11 +120,16 @@ filePths = [os.sep.join([WORKDIR, 'rmsf', 'rmsf_apo.xvg']),
             os.sep.join([WORKDIR, 'rmsf', 'rmsf_holo.xvg']),
             os.sep.join([WORKDIR, 'PLIU_Traj', 'rmsf', 'rmsf_apo.xvg']),
             os.sep.join([WORKDIR, 'PLIU_Traj', 'rmsf', 'rmsf_holo.xvg'])]
-
+'''
+filePths = [os.sep.join([WORKDIR, 'holo', 'rmsf_1.xvg']),
+            os.sep.join([WORKDIR, 'holo', 'rmsf_2.xvg']),
+            os.sep.join([WORKDIR, 'holo', 'rmsf_3.xvg'])]
+trjNames = ['holo 1', 'holo 2', 'holo 3']
 for n, f in zip(trjNames, filePths):
     rmsf.loadTrj(f, n)
 
-genName = lambda u, t, i: '_'.join([u, t, str(i)])
+rmsf.compareTrjsRMSF(trjNames, chain='A')
 
+genName = lambda u, t, i: '_'.join([u, t, str(i)])
 rmsf.compareTrjsRMSF([genName('old', 'apo', 1), genName('old', 'apo', 2), genName('old', 'apo', 3), genName('old', 'apo', 4), genName('new', 'apo', 1)],chain='B')
 rmsf
