@@ -1,5 +1,5 @@
 run modevectors.py
-modevector sys1, sys2
+modevector sys1, sys2, headrgb=(255,0,0)
 create prot1, sys1 and not resn MLT+LIG+NDP
 create prot2, sys2 and not resn MLT+LIG+NDP
 color raspberry, prot1

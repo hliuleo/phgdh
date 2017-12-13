@@ -84,6 +84,4 @@ multi_segs = dict(btmBeta = build_new_top(or_str, _btmBeta),
                                           
 topology.update(multi_segs)
 
-
-
             
