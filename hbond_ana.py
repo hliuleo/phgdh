@@ -57,6 +57,8 @@ new_top = {k:list2Range(selString2List(topology[k])) for k in topology}
 
 
 def assignRegion(resid):
+    '''return the region name of a residue by giving its resid
+       names are in the topology list'''
     for k in new_top:
         if resid in new_top[k]:
             return k
@@ -64,13 +66,13 @@ def assignRegion(resid):
         return np.nan
 
 def cleanLine(l):
-    '''ignore hydrogen type main or side chain'''
     l = l.replace('Seg{}-', '')
     l = l.replace('%', '')
 #    l = [i for i in l.split() if i != sys.argv[2]]
     return l
 
 def ignoreTypeResName(df):
+    '''remove resname and bond type (main or side)'''
     for hType in ['D', 'A']:
         df[hType] = df[hType].str.replace(r'[A-Z]{3}', '')
         for bType in ['-Side', '-Main']:
@@ -80,10 +82,9 @@ def ignoreTypeResName(df):
 
 
 def sort_group_byLVG(df, gbCols, valCol):
-    '''LVG means largest values in group,
-       sort groups by key of their largest value in valCol,
-       gbCols are group by cols,
-       groups are sorted ascendingly, values with group are also ascending'''
+    '''LVG means largest value in group,
+       sort groups grouped by gbCols by their largest value in valCol, 
+       groups are sorted descendingly, elemets within a group are also descending sorted'''
 
     def fillwith(a, valCol):
         a = a.sort_values(by=valCol, ascending=False)
@@ -104,8 +105,8 @@ def sort_group_byLVG(df, gbCols, valCol):
 
 def dealWith(lines):
     '''Read lines of a hbonds details file
-       clean file and save raw; then clear close contact, bond type, adding topology
-       output as by topology sorted by percentage'''
+       clean file and save raw; then remove neighboring contacts, bond type; adding topology name
+       output by regions sorted by contact percentage'''
     lines = [cleanLine(l) for l in lines[2:]]
     lines = [l.strip().split() for l in lines]
     raw = pd.DataFrame(lines)
@@ -114,14 +115,16 @@ def dealWith(lines):
     raw = raw.sort_values(by=p_index, ascending=False)
 
     data = raw.copy()
-    data.columns = ['D', 'A', 'percent']
+    data.columns = ['D', 'A', 'percent'] # D as donor, A as acceptor
     data = ignoreTypeResName(data)
     data.D = data.D.astype(int)
     data.A = data.A.astype(int)
 
     data['dist'] = (data.D-data.A).apply(abs)
-    data = data[data.dist>4]
+    data = data[data.dist>4]  # reomve neighboring contacts which is within 4 residues
 
+# Move residues to a column by their position (Lower, Upper), not bonding type (D, A)
+# simply by comparing their resid, excpet for L12 and H12
 
     data['L'] = data[['D','A']].min(axis=1)
     data['U'] = data[['D','A']].max(axis=1)
@@ -187,8 +190,10 @@ for c in conds:
 
             r, d, s = dealWith(lines)
             s = s.reset_index()
-            s = s[~(s.U==101)] # remove bad data
+# remove bad data          
+            s = s[~(s.U==101)]
             s = s.set_index(['LR','UR'])
+# remove contacts less than 1%
             a = s.groupby(['LR','UR'],axis=0)[['percent']].aggregate(np.sum).reset_index()
             a = a[a.percent>1]
             a = sort_group_byLVG(a,['LR'],'percent').set_index(['LR','UR'])
@@ -223,7 +228,7 @@ hbondsB = pd.read_excel('Apo_hbonds-details.xlsx', 'B')
 
 def do(data):
     data.columns = ['D', 'A', 'percent']
-    data_clear = ignoreType(data)
+    data_clear = ignoreTypeResName(data)
     data_sum = hbondsSum(data)
     data_clear_sum = hbondsSum(data_clear)
     return data_sum, data_clear_sum

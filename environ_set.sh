@@ -47,4 +47,3 @@ TrjDIR=$ApoMltLigTrj
 struct=$ProtMltLig
 index=$ProtMltLig_index
 fi
-
