@@ -18,6 +18,10 @@ from p53_cluster import *
 
 xyz = dataset(os.sep.join([TRAJPATH, 'HLIU_Prot_CoF/', '[0-9]_dropF50.xtc']),
               topology=os.sep.join([STRUCTPATH,'protein_NAD.pdb']))
+xyz_all = dataset(os.sep.join([TRAJPATH, 'Prot_Lig/', '1-3_*.xtc']),
+                  topology=os.sep.join([STRUCTPATH,'protein_NAD.pdb']))
+
+
 ref = md.load(os.sep.join([STRUCTPATH,'protein_NAD.pdb']),
               top=os.sep.join([STRUCTPATH,'protein_NAD.pdb']))
 atom_idxs = ref.top.select('chainid 0 and (residue 77 or residue 206 or residue 174 or residue 211 or residue 154 or residue 233 or residue 259)')
@@ -25,12 +29,22 @@ featurizer = RawPositionsFeaturizer(atom_idxs, ref)
 rawPs = xyz.fit_transform_with(featurizer, 'rawPs', fmt='dir-npy')
 scaler = RobustScaler()
 scaled_rawPs = rawPs.fit_transform_with(scaler, 'scaled_rawPs/', fmt='dir-npy')
-tica_model = tICA(lag_time=1, n_components=100)
+tica_model = tICA(lag_time=1, n_components=50)
 tica_model = scaled_rawPs.fit_with(tica_model)
 tica_model.score(scaled_rawPs)
-xyz_all = dataset(os.sep.join([TRAJPATH, 'Prot_Lig/', '1-3_*.xtc']),
-                  topology=os.sep.join([STRUCTPATH,'protein_NAD.pdb']))
+tica_trajs = scaled_rawPs.transform_with(tica_model, 'ticas/', fmt='dir-npy')
 
+
+micro_num = 500
+txx = np.concatenate(tica_trajs)
+clustered_trajs, clusterer = clusterData(tica_trajs, micro_num)
+drawMicroCluster(txx, clusterer)
+
+lagtimes = list(range(1, 200, 50))
+timescales, n_timescales = calc_ImpliedTimescale(lagtimes, clustered_trajs)
+timescale = timescales*dt
+draw_ImpliedTimescale(timescales, n_timescales)
+plt.ylim([5,10000])
 
 dt = 10
 micro_num = 100
