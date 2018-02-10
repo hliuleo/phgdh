@@ -11,7 +11,10 @@ def angle_between(a,b):
   return math.acos(arccosInput)/math.pi*180
 
 coms = np.loadtxt(sys.argv[1])
-coms = coms.reshape((len(coms), 5, 3))
+if coms.ndim == 2:
+    coms = coms.reshape((len(coms), 5, 3))
+elif coms.ndim == 1:
+    coms = coms.reshape((1, 5, 3))
 
 def calAngles(d):
     def getNV(p):
