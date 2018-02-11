@@ -1,5 +1,6 @@
+source $phgdh/code/environ_set.sh
 condition='prot'
-source /home/hliu/Projects/PHGDH/code/environ_set.sh
+set_parms
 
 # atomIndex:
 # Prot Prot_A_CA 27 Prot_B_CA 28

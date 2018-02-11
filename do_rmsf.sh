@@ -1,5 +1,6 @@
+source $phgdh/code/environ_set.sh
 condition='prot'
-source /home/hliu/Projects/PHGDH/code/environ_set.sh
+set_parms
 
 # atom index
 # protMlt chain A 27 chian B 28

@@ -1,16 +1,16 @@
-export PATH=$PATH:/home/hliu/Projects/PHGDH/code
+export PATH=$PATH:$phgdh/code
 
-DATA='/home/hliu/Projects/PHGDH/data'
-CodeHOME='/home/hliu/Projects/PHGDH/code'
-SYS_SETUP='/home/hliu/Projects/PHGDH/system_prep/SYS'
+DATA=$phgdh'/data'
+CodeHOME=$phgdh'/code'
+SYS_SETUP=$phgdh'/system_prep/SYS'
 
-TrjHOME='/home/hliu/Projects/PHGDH/data/traj/'
+TrjHOME=$phgdh'/data/traj/'
 ApoTrj=$TrjHOME/'HLIU_Prot_CoF'
 ApoLigTrj=$TrjHOME/'HLIU_Prot_CoF_LIG2201'
 ApoMltTrj=$TrjHOME'HLIU_Prot_CoF_SubS_dimer'
 ApoMltLigTrj=$TrjHOME'HLIU_Prot_CoF_SubS_dimer_LIG2201'
 
-StructHOME='/home/hliu/Projects/PHGDH/data/struct/'
+StructHOME=$phgdh'/data/struct/'
 Prot=$StructHOME/'protein_NAD.pdb'
 ProtLig=$StructHOME/'protein_NAD_LIG2201.pdb'
 ProtMlt=$StructHOME/'protein_NAD_MLT2.pdb'
@@ -20,6 +20,7 @@ ProtLig_index=$StructHOME/'protein_NAD_LIG2201.ndx'
 ProtMlt_index=$StructHOME/'protein_NAD_MLT2.ndx'
 ProtMltLig_index=$StructHOME/'protein_NAD_MLT2_LIG2201.ndx'
 
+set_parms() {
 if [ $condition == 'protLig' ]
 then
 TrjDIR=$ApoLigTrj
@@ -47,3 +48,4 @@ TrjDIR=$ApoMltLigTrj
 struct=$ProtMltLig
 index=$ProtMltLig_index
 fi
+}

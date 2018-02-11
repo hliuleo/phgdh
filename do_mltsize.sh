@@ -1,5 +1,6 @@
+source $phgdh/code/environ_set.sh
 condition='protMlt'
-source /home/hliu/Projects/PHGDH/code/environ_set.sh
+set_parms
 
 for i in 1 2 3 4
 do
