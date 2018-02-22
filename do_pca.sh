@@ -15,6 +15,10 @@ proj=true
 
 for i in 1 2 3 1-3
 do
+  if [ ! -d "${i}" ]
+  then
+      mkdir ${i}
+  fi
 cd ${i}
 
 if $covar

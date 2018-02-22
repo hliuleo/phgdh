@@ -4,6 +4,10 @@ set_parms
 
 for i in 1 2 3
 do
+  if [ ! -d "${i}" ]
+  then
+      mkdir ${i}
+  fi
   cd ${i}
   vmd -dispdev text -e $CodeHOME/hole_rg.tcl -args $struct ${TrjDIR}/${i}_dropF50.xtc A
   more hole_rg.dat >> ../hole_rg.dat
